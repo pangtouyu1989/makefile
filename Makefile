@@ -1,12 +1,13 @@
 vpath %.cpp Source#:add
 ver = debug #根据  make ver=release 命令判断生成release or debug版本
 CXXFLAGS = -Wall -c -std=c++11
-ifeq ($(ver),debug)
-	CXXFLAGS += -g -Ddebug
-else
+ifeq ($(ver),release)
 	CXXFLAGS += -o3
+else
+	CXXFLAGS += -g #-m64 make ver=release BITS=64
 endif
-
+#ifeq ($(bits),64)
+#-m32 表示32 -m64 表示64位
 SRC_DIR = ./Source #./add     #添加所有包含cpp文件的文件夹
 OBJ_DIR = ./obj
 TAR_DIR = ./bin
@@ -17,13 +18,13 @@ OBJ = $(addprefix $(OBJ_DIR)/,$(patsubst %.cpp,%.o,$(notdir $(SRC))))
 $(info "OBJ:$(OBJ)")
 #./obj/add.o
 INCLUDE = \
-						-I./Include
+		-I./Include
 #SRC_OBJ = $(DEC:.cpp = .o)
 TARGET  = $(addprefix $(TAR_DIR)/,$(TARGET_NAME))
 DEBUG = -g -o2     #DEBUG 值可以不赋值 如在make DEBUG = "-g -o2|-D_DEBUG"也可以
 CFLAGS = $(DEBUG) -Wall -c
-LIB_PATH = -L /path
-LIBS = -lfun
+LIB_PATH = -L /path #动态库路径
+LIBS = -lfun   #动态库
 RM = rm -rf
 CXX := g++
 PWD = $(shell pwd)
@@ -62,3 +63,5 @@ clean:
 #  生成动态库
 #  编译 g++ -c -fPIC $^ -o $@
 #  链接 g++ -shared -o -fPIC -o $@ $^
+#  链接静态库 g++ -staitc
+
